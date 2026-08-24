@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>scar1437 的主页</title>
+<style>
+  :root{
+    --bg:#f5f7fa; --bg2:#eef2f7;
+    --card:#ffffff; --card-hover:#fbfcff;
+    --text:#1f2937; --muted:#6b7280; --line:#e5e7eb;
+    --accent:#4f46e5; --accent2:#7c3aed; --accent-soft:#eef2ff;
+    --shadow:0 1px 3px rgba(16,24,40,.06),0 8px 24px rgba(16,24,40,.06);
+    --shadow-lg:0 12px 36px rgba(79,70,229,.18);
+    --radius:16px;
+  }
+  body.dark{
+    --bg:#0f1220; --bg2:#141831;
+    --card:#1a1f38; --card-hover:#222845;
+    --text:#e6e8f0; --muted:#9aa3b8; --line:#2a3150;
+    --accent:#8b8cff; --accent2:#b794f6; --accent-soft:#232a4d;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+    --shadow-lg:0 12px 36px rgba(139,140,255,.25);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.6;
+    -webkit-font-smoothing:antialiased; transition:background .3s,color .3s;
+  }
+  a{color:inherit;text-decoration:none}
+
+  /* ===== 顶部栏 ===== */
+  header{
+    position:sticky; top:0; z-index:50;
+    backdrop-filter:saturate(180%) blur(12px);
+    background:color-mix(in srgb, var(--bg) 78%, transparent);
+    border-bottom:1px solid var(--line);
+  }
+  .bar{display:flex;align-items:center;gap:14px;max-width:1080px;margin:0 auto;padding:12px 20px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;white-space:nowrap}
+  .brand .dot{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#fff;font-size:14px}
+  .search{flex:1;position:relative}
+  .search input{
+    width:100%;padding:10px 14px 10px 38px;border:1px solid var(--line);
+    border-radius:999px;background:var(--card);color:var(--text);font-size:14px;outline:none;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .search input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+  .search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted)}
+  .toggle{
+    flex:none;width:42px;height:42px;border-radius:12px;border:1px solid var(--line);
+    background:var(--card);cursor:pointer;display:grid;place-items:center;color:var(--muted);transition:.2s;
+  }
+  .toggle:hover{color:var(--accent);border-color:var(--accent)}
+
+  /* ===== 主体 ===== */
+  main{max-width:1080px;margin:0 auto;padding:28px 20px 60px}
+  .hero{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;border-radius:24px;padding:40px 34px;box-shadow:var(--shadow-lg);
+    position:relative;overflow:hidden;
+  }
+  .hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.12)}
+  .hero::before{content:"";position:absolute;right:60px;bottom:-80px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.08)}
+  .avatar{width:64px;height:64px;border-radius:18px;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:28px;font-weight:800;backdrop-filter:blur(4px)}
+  .hero h1{font-size:26px;margin:16px 0 4px;letter-spacing:.5px}
+  .hero p{opacity:.92;font-size:14px}
+  .hero .tags{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
+  .hero .tags span{background:rgba(255,255,255,.18);padding:4px 12px;border-radius:999px;font-size:12px}
+
+  /* 快捷导航 */
+  .nav-chips{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 8px}
+  .chip{
+    padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);
+    font-size:13px;color:var(--muted);cursor:pointer;transition:.2s;
+  }
+  .chip:hover{color:var(--accent);border-color:var(--accent);transform:translateY(-1px)}
+
+  /* ===== 区块 ===== */
+  section{margin-top:34px;scroll-margin-top:78px}
+  .sec-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .sec-head .ico{width:30px;height:30px;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-size:16px}
+  .sec-head h2{font-size:19px}
+  .sec-head .count{margin-left:auto;font-size:12px;color:var(--muted);background:var(--bg2);padding:3px 10px;border-radius:999px}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+  .item{
+    position:relative;display:flex;align-items:center;gap:10px;
+    padding:14px 16px;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;box-shadow:var(--shadow);transition:.18s;
+  }
+  .item:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:var(--shadow-lg);background:var(--card-hover)}
+  .item .favi{width:34px;height:34px;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-size:15px;flex:none}
+  .item .txt{min-width:0}
+  .item .t{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .item.empty{opacity:.55;cursor:default}
+  .item.empty .favi{background:var(--bg2);color:var(--muted)}
+  .item.empty:hover{transform:none;border-color:var(--line);box-shadow:var(--shadow);background:var(--card)}
+  .item.empty .t{font-style:italic}
+
+  .note{
+    margin-top:12px;padding:12px 16px;background:var(--bg2);border:1px dashed var(--line);
+    border-radius:12px;font-size:13px;color:var(--muted);text-align:center;
+  }
+
+  .empty-state{display:none;text-align:center;color:var(--muted);padding:48px 0;font-size:15px}
+  .empty-state.show{display:block}
+
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:50px;padding-top:24px;border-top:1px solid var(--line)}
+  footer .pulse{display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;margin-right:6px;box-shadow:0 0 0 0 rgba(34,197,94,.6);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+
+  @media(max-width:560px){
+    .hero{padding:30px 22px}
+    .grid{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="brand"><span class="dot">S</span> scar1437</div>
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="q" type="text" placeholder="搜索网站、软件、资料…" autocomplete="off">
+    </div>
+    <button class="toggle" id="theme" title="切换主题">
+      <svg id="theme-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="avatar">1437</div>
+    <h1>scar1437 的主页</h1>
+    <p>Hello! This is my firstpage. 一个收集常用工具与学习资源的个人导航站。</p>
+    <div class="tags"><span>🔗 资源导航</span><span>🐍 Python</span><span>📚 学习资料</span><span>🛠 自制小软件</span></div>
+  </div>
+
+  <div class="nav-chips" id="chips"></div>
+
+  <!-- 0. AI 常用网站 -->
+  <section id="s-ai">
+    <div class="sec-head"><span class="ico">🤖</span><h2>AI 常用网站</h2><span class="count" data-count></span></div>
+    <div class="grid">
+      <a class="item" href="https://chat.openai.com/" target="_blank"><span class="favi">🤖</span><span class="txt"><span class="t">ChatGPT</span></span></a>
+      <a class="item" href="https://claude.ai/" target="_blank"><span class="favi">🎭</span><span class="txt"><span class="t">Claude</span></span></a>
+      <a class="item" href="https://gemini.google.com/" target="_blank"><span class="favi">✨</span><span class="txt"><span class="t">Gemini</span></span></a>
+      <a class="item" href="https://copilot.microsoft.com/" target="_blank"><span class="favi">💬</span><span class="txt"><span class="t">Microsoft Copilot</span></span></a>
+      <a class="item" href="https://www.perplexity.ai/" target="_blank"><span class="favi">❓</span><span class="txt"><span class="t">Perplexity</span></span></a>
+      <a class="item" href="https://www.midjourney.com/" target="_blank"><span class="favi">🎨</span><span class="txt"><span class="t">Midjourney</span></span></a>
+      <a class="item" href="https://huggingface.co/" target="_blank"><span class="favi">🤗</span><span class="txt"><span class="t">Hugging Face</span></span></a>
+      <a class="item" href="https://poe.com/" target="_blank"><span class="favi">📮</span><span class="txt"><span class="t">Poe</span></span></a>
+      <a class="item" href="https://chat.deepseek.com/" target="_blank"><span class="favi">🐳</span><span class="txt"><span class="t">DeepSeek</span></span></a>
+      <a class="item" href="https://character.ai/" target="_blank"><span class="favi">👥</span><span class="txt"><span class="t">Character.AI</span></span></a>
+      <a class="item" href="https://kimi.moonshot.cn/" target="_blank"><span class="favi">🌙</span><span class="txt"><span class="t">Kimi</span></span></a>
+      <a class="item" href="https://yiyan.baidu.com/" target="_blank"><span class="favi">💡</span><span class="txt"><span class="t">文心一言</span></span></a>
+      <a class="item" href="https://www.doubao.com/" target="_blank"><span class="favi">🫘</span><span class="txt"><span class="t">豆包</span></span></a>
+      <a class="item" href="https://tongyi.aliyun.com/" target="_blank"><span class="favi">☁️</span><span class="txt"><span class="t">通义千问</span></span></a>
+      <a class="item" href="https://grok.com/" target="_blank"><span class="favi">🌀</span><span class="txt"><span class="t">Grok</span></span></a>
+      <a class="item" href="https://www.meta.ai/" target="_blank"><span class="favi">🔵</span><span class="txt"><span class="t">Meta AI</span></span></a>
+      <a class="item" href="https://chatglm.cn/" target="_blank"><span class="favi">🧠</span><span class="txt"><span class="t">智谱清言</span></span></a>
+      <a class="item" href="https://xinghuo.xfyun.cn/" target="_blank"><span class="favi">🔥</span><span class="txt"><span class="t">讯飞星火</span></span></a>
+      <a class="item" href="https://suno.com/" target="_blank"><span class="favi">🎵</span><span class="txt"><span class="t">Suno</span></span></a>
+      <a class="item" href="https://runwayml.com/" target="_blank"><span class="favi">🎬</span><span class="txt"><span class="t">Runway</span></span></a>
+    </div>
+    <div class="note">全球最热门的 AI 工具，聊天 / 绘画 / 视频 / 音乐 / 编程一站直达</div>
+  </section>
+
+  <!-- 1. 常用搜索 -->
+  <section id="s-search">
+    <div class="sec-head"><span class="ico">🔍</span><h2>常用搜索</h2><span class="count" data-count></span></div>
+    <div class="grid">
+      <a class="item" href="http://www.baidu.com" target="_blank"><span class="favi">百</span><span class="txt"><span class="t">百度搜索</span></span></a>
+      <a class="item" href="https://cn.bing.com/" target="_blank"><span class="favi">B</span><span class="txt"><span class="t">bing 搜索</span></span></a>
+      <a class="item" href="https://fanyi.baidu.com/" target="_blank"><span class="favi">译</span><span class="txt"><span class="t">百度翻译</span></span></a>
+      <a class="item" href="https://tuostudy.upnb.top/" target="_blank"><span class="favi">图</span><span class="txt"><span class="t">图欧搜索</span></span></a>
+    </div>
+  </section>
+
+  <!-- 2. 各大资源官网 -->
+  <section id="s-res">
+    <div class="sec-head"><span class="ico">🌐</span><h2>各大资源官网</h2><span class="count" data-count></span></div>
+    <div class="grid">
+      <a class="item" href="https://www.python.org/" target="_blank"><span class="favi">Py</span><span class="txt"><span class="t">Python 官网</span></span></a>
+      <a class="item" href="https://pycharm.en.softonic.com/" target="_blank"><span class="favi">Pc</span><span class="txt"><span class="t">PyCharm 官网</span></span></a>
+      <a class="item" href="https://www.anaconda.com/products/distribution" target="_blank"><span class="favi">An</span><span class="txt"><span class="t">Anaconda 官网</span></span></a>
+      <a class="item" href="https://github.com/" target="_blank"><span class="favi">Gh</span><span class="txt"><span class="t">GitHub 官网</span></span></a>
+      <a class="item" href="https://git-scm.com/" target="_blank"><span class="favi">Gt</span><span class="txt"><span class="t">Git 官网</span></span></a>
+      <a class="item" href="https://gitee.com/" target="_blank"><span class="favi">Ge</span><span class="txt"><span class="t">Gitee 官网</span></span></a>
+      <a class="item" href="https://pypi.org/" target="_blank"><span class="favi">Pi</span><span class="txt"><span class="t">PyPI 官网</span></span></a>
+      <a class="item" href="https://docs.python.org/3/library/re.html#" target="_blank"><span class="favi">Re</span><span class="txt"><span class="t">Python 正则</span></span></a>
+      <a class="item" href="https://code.visualstudio.com/" target="_blank"><span class="favi">Vs</span><span class="txt"><span class="t">VS Code</span></span></a>
+      <a class="item" href="https://otp.landian.vip/zh-cn/" target="_blank"><span class="favi">Ot</span><span class="txt"><span class="t">Office Tool Plus</span></span></a>
+      <a class="item" href="https://powerbi.microsoft.com/zh-cn/desktop/" target="_blank"><span class="favi">Pb</span><span class="txt"><span class="t">Power BI Desktop</span></span></a>
+      <a class="item" href="https://www.voidtools.com/zh-cn/downloads/" target="_blank"><span class="favi">Ev</span><span class="txt"><span class="t">Everything 官网</span></span></a>
+      <a class="item" href="https://regex101.com/" target="_blank"><span class="favi">Rg</span><span class="txt"><span class="t">正则表达式</span></span></a>
+      <a class="item" href="https://ubuntu.com/" target="_blank"><span class="favi">Ub</span><span class="txt"><span class="t">Ubuntu 乌班图</span></span></a>
+      <a class="item" href="https://www.redhat.com/zh" target="_blank"><span class="favi">Rh</span><span class="txt"><span class="t">红帽 RedHat</span></span></a>
+      <a class="item" href="https://golang.google.cn/play/" target="_blank"><span class="favi">Go</span><span class="txt"><span class="t">Golang 官网</span></span></a>
+      <a class="item" href="https://studygolang.com/" target="_blank"><span class="favi">G2</span><span class="txt"><span class="t">Go 语言中文网</span></span></a>
+      <a class="item" href="https://studygolang.com/pkgdoc" target="_blank"><span class="favi">G3</span><span class="txt"><span class="t">Golang 标准库</span></span></a>
+      <a class="item" href="https://www.r-project.org/foundation/" target="_blank"><span class="favi">R</span><span class="txt"><span class="t">R 语言官网</span></span></a>
+      <a class="item" href="https://wiki.php.net/" target="_blank"><span class="favi">Ph</span><span class="txt"><span class="t">PHP 官网</span></span></a>
+      <a class="item" href="http://ocr.space/" target="_blank"><span class="favi">Oc</span><span class="txt"><span class="t">OCR Space</span></span></a>
+      <a class="item" href="https://cn.e-learning.huawei.com/#/huaweiTenant/Certification" target="_blank"><span class="favi">Hw</span><span class="txt"><span class="t">华为认证</span></span></a>
+      <a class="item" href="https://cn.huaweils.com/#/huaweiTenant/Course?businessDomain=5&courseClass=1" target="_blank"><span class="favi">H2</span><span class="txt"><span class="t">华为认证培训课</span></span></a>
+      <a class="item" href="https://www.59xuexi.com/?p=4110" target="_blank"><span class="favi">H3</span><span class="txt"><span class="t">华为认证教材</span></span></a>
+      <a class="item" href="https://calibre-ebook.com/download_windows" target="_blank"><span class="favi">Cb</span><span class="txt"><span class="t">Calibre 工具</span></span></a>
+      <a class="item" href="http://24mail.chacuo.net/" target="_blank"><span class="favi">Ml</span><span class="txt"><span class="t">10 分钟邮箱</span></span></a>
+      <a class="item" href="https://xmsoushu.com/#/" target="_blank"><span class="favi">Xm</span><span class="txt"><span class="t">熊猫搜书</span></span></a>
+      <a class="item" href="https://convertio.co/zh/" target="_blank"><span class="favi">Cv</span><span class="txt"><span class="t">Convertio 文件转换</span></span></a>
+      <a class="item" href="https://wantwords.net/" target="_blank"><span class="favi">Ww</span><span class="txt"><span class="t">反向词典</span></span></a>
+      <a class="item" href="https://wenshu.court.gov.cn/" target="_blank"><span class="favi">Ws</span><span class="txt"><span class="t">中国裁判文书网</span></span></a>
+    </div>
+  </section>
+
+  <!-- 3. 自制 Python 小软件 -->
+  <section id="s-soft">
+    <div class="sec-head"><span class="ico">🛠</span><h2>自制 Python 小软件</h2><span class="count" data-count></span></div>
+    <div class="grid">
+      <a class="item" href="https://download.csdn.net/download/scar1122/85142928" target="_blank"><span class="favi">📥</span><span class="txt"><span class="t">B站视频下载</span></span></a>
+      <a class="item" href="https://download.csdn.net/download/scar1122/85142849" target="_blank"><span class="favi">🖼</span><span class="txt"><span class="t">图片识别文字</span></span></a>
+      <a class="item" href="https://download.csdn.net/download/scar1122/85133121" target="_blank"><span class="favi">📄</span><span class="txt"><span class="t">PDF 数据识别</span></span></a>
+      <a class="item" href="https://download.csdn.net/download/scar1122/85133078" target="_blank"><span class="favi">🔊</span><span class="txt"><span class="t">文本转换 MP3</span></span></a>
+      <a class="item" href="https://download.csdn.net/download/scar1122/85142616" target="_blank"><span class="favi">🌐</span><span class="txt"><span class="t">网页代码获取</span></span></a>
+      <div class="item empty"><span class="favi">＋</span><span class="txt"><span class="t">待添加</span></span></div>
+      <div class="item empty"><span class="favi">＋</span><span class="txt"><span class="t">待添加</span></span></div>
+      <div class="item empty"><span class="favi">＋</span><span class="txt"><span class="t">待添加</span></span></div>
+    </div>
+    <div class="note">以下为本人 Python 写的小程序，需要的自取 ^_^</div>
+  </section>
+
+  <!-- 4. 基础学习资料 -->
+  <section id="s-basic">
+    <div class="sec-head"><span class="ico">📘</span><h2>基础学习资料</h2><span class="count" data-count></span></div>
+    <div class="grid">
+      <a class="item" href="https://www.bilibili.com/video/BV1Wh411d7hq?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">Python 爬虫</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1ji4y157uB?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">Python 数据分析</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1gt4y1D7W8?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">Python & Office</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1Z7411c7U6?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">Excel</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1oa4y1j75e?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">Excel PQ 合集</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1F741137Sm?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">PQ 简单课程</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1qa4y1H7wp?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">Power BI</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1YE411E7p3?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">DAX</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1sV411U7U8?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">DAX 2</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1Q64y1c7ji?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">M 语言第一季</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV11y4y1C7a8?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">M 语言第二季</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1Zz4y1o7ka?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">M 语言第三季</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1tf4y117Sh?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">Access</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1Yz4y1Z7aJ?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">PHP 架构</span></span></a>
+      <div class="item empty"><span class="favi">＋</span><span class="txt"><span class="t">待添加</span></span></div>
+      <div class="item empty"><span class="favi">＋</span><span class="txt"><span class="t">待添加</span></span></div>
+      <div class="item empty"><span class="favi">＋</span><span class="txt"><span class="t">待添加</span></span></div>
+      <div class="item empty"><span class="favi">＋</span><span class="txt"><span class="t">待添加</span></span></div>
+    </div>
+    <div class="note">B 站视频资料，感兴趣的可以跟着学学</div>
+  </section>
+
+  <!-- 5. 进阶学习资料 -->
+  <section id="s-adv">
+    <div class="sec-head"><span class="ico">🚀</span><h2>进阶学习资料</h2><span class="count" data-count></span></div>
+    <div class="grid">
+      <a class="item" href="https://www.bilibili.com/video/BV1w3411Y7BV/?spm_id_from=333.788" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">经营分析财务 BP</span></span></a>
+      <a class="item" href="https://blog.csdn.net/shykevin/article/details/109109114" target="_blank"><span class="favi">📝</span><span class="txt"><span class="t">Python 爬取视频</span></span></a>
+      <a class="item" href="https://blog.csdn.net/m0_64036070/article/details/123853489" target="_blank"><span class="favi">📝</span><span class="txt"><span class="t">正则表达式</span></span></a>
+      <a class="item" href="https://github.com/iswbm/python-guide" target="_blank"><span class="favi">📚</span><span class="txt"><span class="t">Python Guide</span></span></a>
+      <a class="item" href="https://developer.mozilla.org/zh-CN/docs/learn/Server-side/Django" target="_blank"><span class="favi">🅜</span><span class="txt"><span class="t">Django Web 框架</span></span></a>
+      <a class="item" href="https://zhuanlan.zhihu.com/djstudyteam" target="_blank"><span class="favi">🅩</span><span class="txt"><span class="t">DRF 实战教程</span></span></a>
+      <a class="item" href="https://realpython.com/cpython-source-code-guide/" target="_blank"><span class="favi">🐍</span><span class="txt"><span class="t">CPython 源码指南</span></span></a>
+      <a class="item" href="http://www.pythondoc.com/flask/index.html" target="_blank"><span class="favi">🧪</span><span class="txt"><span class="t">Flask 官方文档</span></span></a>
+      <a class="item" href="http://www.pythondoc.com/" target="_blank"><span class="favi">🧪</span><span class="txt"><span class="t">Flask 系统学习</span></span></a>
+      <a class="item" href="https://pycharm.iswbm.com/" target="_blank"><span class="favi">Pc</span><span class="txt"><span class="t">PyCharm 中文指南</span></span></a>
+      <a class="item" href="https://github.com/kirang89/pycrumbs" target="_blank"><span class="favi">📚</span><span class="txt"><span class="t">PyCrumbs</span></span></a>
+      <a class="item" href="http://www.pythontip.com/python-patterns/detail/abstract_factory" target="_blank"><span class="favi">💡</span><span class="txt"><span class="t">Python Tips 模式</span></span></a>
+      <a class="item" href="https://magic.iswbm.com/" target="_blank"><span class="favi">✨</span><span class="txt"><span class="t">Python 黑魔法手册</span></span></a>
+      <a class="item" href="https://python.iswbm.com/" target="_blank"><span class="favi">🐍</span><span class="txt"><span class="t">Python 中文指南</span></span></a>
+      <a class="item" href="https://scrapy-cookbook.readthedocs.io/zh_CN/latest/" target="_blank"><span class="favi">🕷</span><span class="txt"><span class="t">Scrapy Cookbook</span></span></a>
+      <a class="item" href="https://flaggo.github.io/python3-source-code-analysis/" target="_blank"><span class="favi">🔬</span><span class="txt"><span class="t">Python3 源码剖析</span></span></a>
+      <a class="item" href="http://www.pythondoc.com/" target="_blank"><span class="favi">🏠</span><span class="txt"><span class="t">Python 大本营</span></span></a>
+      <a class="item" href="https://www.bookstack.cn/explore?cid=13&tab=popular" target="_blank"><span class="favi">📖</span><span class="txt"><span class="t">书栈网：Python</span></span></a>
+      <a class="item" href="https://learnku.com/docs/pymotw" target="_blank"><span class="favi">📦</span><span class="txt"><span class="t">Python 3 标准库实例</span></span></a>
+      <a class="item" href="https://python3-cookbook.readthedocs.io/zh_CN/latest/" target="_blank"><span class="favi">🍳</span><span class="txt"><span class="t">Python Cookbook</span></span></a>
+      <a class="item" href="http://www.pythontip.com/coding/code_oj" target="_blank"><span class="favi">💡</span><span class="txt"><span class="t">Python Tips 刷题</span></span></a>
+      <a class="item" href="https://orangedatamining.com/" target="_blank"><span class="favi">🍊</span><span class="txt"><span class="t">Orange3 官网</span></span></a>
+      <a class="item" href="https://orange3.readthedocs.io/projects/orange-data-mining-library/en/latest/#tutorial" target="_blank"><span class="favi">🍊</span><span class="txt"><span class="t">Orange DML</span></span></a>
+      <a class="item" href="https://blog.csdn.net/SunChao3555/article/details/84975783" target="_blank"><span class="favi">📝</span><span class="txt"><span class="t">Orange 中文介绍</span></span></a>
+    </div>
+    <div class="note">各大 Python 网站集成，需要的可以关注</div>
+  </section>
+
+  <div class="empty-state" id="empty">没有找到匹配的网站，换个关键词试试 ~</div>
+
+  <footer>
+    <p><span class="pulse"></span>资料陆续更新中，敬请期待……</p>
+    <p style="margin-top:6px;opacity:.7">scar1437 · 个人导航站 · 单文件离线版</p>
+  </footer>
+</main>
+
+<script>
+  // 主题切换（记忆到 localStorage）
+  (function(){
+    var saved = localStorage.getItem('scar-theme');
+    if(saved === 'dark') document.body.classList.add('dark');
+    document.getElementById('theme').addEventListener('click', function(){
+      document.body.classList.toggle('dark');
+      localStorage.setItem('scar-theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+  })();
+
+  // 顶部快捷导航（根据区块自动生成）
+  (function(){
+    var chips = document.getElementById('chips');
+    document.querySelectorAll('main section').forEach(function(sec){
+      var h = sec.querySelector('h2');
+      if(!h) return;
+      var c = document.createElement('a');
+      c.className = 'chip';
+      c.textContent = h.textContent;
+      c.href = '#' + sec.id;
+      chips.appendChild(c);
+    });
+  })();
+
+  // 显示每个区块的数量
+  document.querySelectorAll('section').forEach(function(sec){
+    var items = sec.querySelectorAll('.item:not(.empty)').length;
+    var badge = sec.querySelector('[data-count]');
+    if(badge) badge.textContent = items + ' 个';
+  });
+
+  // 实时搜索过滤
+  var q = document.getElementById('q');
+  var sections = Array.from(document.querySelectorAll('main section'));
+  var emptyState = document.getElementById('empty');
+  q.addEventListener('input', function(){
+    var kw = q.value.trim().toLowerCase();
+    var anyVisible = false;
+    sections.forEach(function(sec){
+      var items = sec.querySelectorAll('.item');
+      var secHas = false;
+      items.forEach(function(it){
+        var hit = it.textContent.toLowerCase().indexOf(kw) !== -1;
+        it.style.display = (kw === '' || hit) ? '' : 'none';
+        if(kw === '' || hit) secHas = true;
+      });
+      sec.style.display = secHas ? '' : 'none';
+      if(secHas) anyVisible = true;
+    });
+    emptyState.classList.toggle('show', !anyVisible);
+  });
+</script>
+</body>
+</html>
