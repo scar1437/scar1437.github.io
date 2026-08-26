@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>scar1437 的主页</title>
+<style>
+  :root{
+    --bg:#f5f7fa; --bg2:#eef2f7;
+    --card:#ffffff; --card-hover:#fbfcff;
+    --text:#1f2937; --muted:#6b7280; --line:#e5e7eb;
+    --accent:#4f46e5; --accent2:#7c3aed; --accent-soft:#eef2ff;
+    --shadow:0 1px 3px rgba(16,24,40,.06),0 8px 24px rgba(16,24,40,.06);
+    --shadow-lg:0 12px 36px rgba(79,70,229,.18);
+    --radius:16px;
+  }
+  body.dark{
+    --bg:#0f1220; --bg2:#141831;
+    --card:#1a1f38; --card-hover:#222845;
+    --text:#e6e8f0; --muted:#9aa3b8; --line:#2a3150;
+    --accent:#8b8cff; --accent2:#b794f6; --accent-soft:#232a4d;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+    --shadow-lg:0 12px 36px rgba(139,140,255,.25);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.6;
+    -webkit-font-smoothing:antialiased; transition:background .3s,color .3s;
+  }
+  a{color:inherit;text-decoration:none}
+
+  /* ===== 顶部栏 ===== */
+  header{
+    position:sticky; top:0; z-index:50;
+    backdrop-filter:saturate(180%) blur(12px);
+    background:color-mix(in srgb, var(--bg) 78%, transparent);
+    border-bottom:1px solid var(--line);
+  }
+  .bar{display:flex;align-items:center;gap:14px;max-width:1080px;margin:0 auto;padding:12px 20px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;white-space:nowrap}
+  .brand .dot{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#fff;font-size:14px}
+  .search{flex:1;position:relative}
+  .search input{
+    width:100%;padding:10px 14px 10px 38px;border:1px solid var(--line);
+    border-radius:999px;background:var(--card);color:var(--text);font-size:14px;outline:none;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .search input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+  .search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted)}
+  .toggle{
+    flex:none;width:42px;height:42px;border-radius:12px;border:1px solid var(--line);
+    background:var(--card);cursor:pointer;display:grid;place-items:center;color:var(--muted);transition:.2s;
+  }
+  .toggle:hover{color:var(--accent);border-color:var(--accent)}
+
+  /* ===== 主体 ===== */
+  main{max-width:1080px;margin:0 auto;padding:28px 20px 60px}
+  .hero{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;border-radius:24px;padding:40px 34px;box-shadow:var(--shadow-lg);
+    position:relative;overflow:hidden;
+  }
+  .hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.12)}
+  .hero::before{content:"";position:absolute;right:60px;bottom:-80px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.08)}
+  .avatar{width:64px;height:64px;border-radius:18px;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:28px;font-weight:800;backdrop-filter:blur(4px)}
+  .hero h1{font-size:26px;margin:16px 0 4px;letter-spacing:.5px}
+  .hero p{opacity:.92;font-size:14px}
+  .hero .tags{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
+  .hero .tags span{background:rgba(255,255,255,.18);padding:4px 12px;border-radius:999px;font-size:12px}
+
+  /* 快捷导航 */
+  .nav-chips{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 8px}
+  .chip{
+    padding:8px 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);
+    font-size:13px;color:var(--muted);cursor:pointer;transition:.2s;
+  }
+  .chip:hover{color:var(--accent);border-color:var(--accent);transform:translateY(-1px)}
+
+  /* ===== 区块 ===== */
+  section{margin-top:34px;scroll-margin-top:78px}
+  .sec-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .sec-head .ico{width:30px;height:30px;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-size:16px}
+  .sec-head h2{font-size:19px}
+  .sec-head .count{margin-left:auto;font-size:12px;color:var(--muted);background:var(--bg2);padding:3px 10px;border-radius:999px}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+  .item{
+    position:relative;display:flex;align-items:center;gap:10px;
+    padding:14px 16px;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;box-shadow:var(--shadow);transition:.18s;
+  }
+  .item:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:var(--shadow-lg);background:var(--card-hover)}
+  .item .favi{width:34px;height:34px;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-size:15px;flex:none}
+  .item .txt{min-width:0}
+  .item .t{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .item.empty{opacity:.55;cursor:default}
+  .item.empty .favi{background:var(--bg2);color:var(--muted)}
+  .item.empty:hover{transform:none;border-color:var(--line);box-shadow:var(--shadow);background:var(--card)}
+  .item.empty .t{font-style:italic}
+
+  /* AI 区块卡片可拖拽排序 */
+  #s-ai .item{cursor:grab;touch-action:manipulation}
+  #s-ai .item:active{cursor:grabbing}
+  #s-ai .item.dragging{opacity:.4;cursor:grabbing;transform:scale(.98)}
+  #s-ai .item.drag-over{box-shadow:0 0 0 2px var(--accent), var(--shadow-lg)}
+
+  .note{
+    margin-top:12px;padding:12px 16px;background:var(--bg2);border:1px dashed var(--line);
+    border-radius:12px;font-size:13px;color:var(--muted);text-align:center;
+  }
+
+  .empty-state{display:none;text-align:center;color:var(--muted);padding:48px 0;font-size:15px}
+  .empty-state.show{display:block}
+
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:50px;padding-top:24px;border-top:1px solid var(--line)}
+  footer .pulse{display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;margin-right:6px;box-shadow:0 0 0 0 rgba(34,197,94,.6);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+
+  @media(max-width:560px){
+    .hero{padding:30px 22px}
+    .grid{grid-template-columns:1fr 1fr}
+  }
+
+  /* ===== 自建 AI 聊天窗 ===== */
+  .chat-fab{position:fixed;right:22px;bottom:22px;z-index:60;width:56px;height:56px;border:none;border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;cursor:grab;font-size:24px;
+    box-shadow:var(--shadow-lg);display:grid;place-items:center;transition:.2s}
+  .chat-fab:hover{transform:translateY(-2px) scale(1.04)}
+  .chat-panel{position:fixed;right:22px;bottom:70px;z-index:60;width:360px;max-width:calc(100vw - 32px);height:520px;
+    background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-lg);
+    display:none;flex-direction:column;overflow:hidden}
+  .chat-panel.open{display:flex}
+  .chat-rsz{position:absolute;z-index:7;opacity:.18;transition:opacity .15s;background:var(--accent)}
+  .chat-rsz:hover{opacity:.75}
+  .chat-rsz.n{top:0;left:12px;right:12px;height:14px;cursor:ns-resize}
+  .chat-rsz.s{bottom:0;left:12px;right:12px;height:14px;cursor:ns-resize}
+  .chat-rsz.e{right:0;top:12px;bottom:12px;width:14px;cursor:ew-resize}
+  .chat-rsz.w{left:0;top:12px;bottom:12px;width:14px;cursor:ew-resize}
+  .chat-rsz.ne{top:0;right:0;width:28px;height:28px;cursor:nesw-resize}
+  .chat-rsz.nw{top:0;left:0;width:28px;height:28px;cursor:nwse-resize}
+  .chat-rsz.se{bottom:0;right:0;width:28px;height:28px;cursor:nwse-resize}
+  .chat-rsz.sw{bottom:0;left:0;width:28px;height:28px;cursor:nesw-resize}
+  body.focus-chat .chat-fab{display:none !important}
+  body.focus-chat .chat-rsz{display:none !important}
+  body.focus-chat .chat-panel{left:0 !important;top:0 !important;right:0 !important;bottom:0 !important;
+    width:100vw !important;height:100vh !important;max-width:none !important;max-height:none !important;border-radius:0 !important;border:none !important}
+  body.focus-chat .chat-head{cursor:default}
+  .chat-head{display:flex;align-items:center;gap:8px;padding:12px 14px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;cursor:move}
+  .chat-head select,.chat-head button{cursor:pointer}
+  .chat-head .ttl{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chat-head .chat-site{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:12px;padding:4px 6px;border-radius:8px;cursor:pointer;outline:none;max-width:100px}
+  .chat-head .chat-site option{color:#222}
+  .chat-head .cls{background:rgba(255,255,255,.2);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;display:grid;place-items:center}
+  .chat-head .cls{margin-left:auto}
+  .chat-head .chat-home{background:rgba(255,255,255,.2);border:none;color:#fff;width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:14px;display:grid;place-items:center}
+  .chat-frame-wrap{flex:1;position:relative;background:var(--bg2)}
+  .chat-frame{position:absolute;inset:0;width:100%;height:100%;border:none;background:#fff}
+  .chat-toolbar{padding:8px 12px;border-top:1px solid var(--line);background:var(--card);font-size:12px;color:var(--muted);text-align:center}
+  body.focus-chat header, body.focus-chat main{display:none !important}
+  body.focus-chat{background:#fff}
+  @media(max-width:560px){.chat-panel{right:8px;bottom:70px;width:calc(100vw - 16px)}}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="brand"><span class="dot">S</span> scar1437</div>
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input id="q" type="text" placeholder="搜索网站、软件、资料…" autocomplete="off">
+    </div>
+    <button class="toggle" id="theme" title="切换主题">
+      <svg id="theme-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="avatar">1437</div>
+    <h1>scar1437 的主页</h1>
+    <p>Hello! This is my firstpage. 一个收集常用工具与学习资源的个人导航站。</p>
+    <div class="tags"><span>🔗 资源导航</span><span>🐍 Python</span><span>📚 学习资料</span><span>🛠 自制小软件</span></div>
+  </div>
+
+  <div class="nav-chips" id="chips"></div>
+
+  <!-- 0. 快速测试 -->
+  <section id="s-mind">
+    <div class="sec-head"><span class="ico">🧠</span><h2>快速测试</h2><span class="count" data-count></span></div>
+    <div class="grid">
+      <a class="item" href="http://47.116.0.168/apps/mind-audit" target="_blank"><span class="favi">🧠</span><span class="txt"><span class="t">快速 mind 测试</span></span></a>
+    </div>
+  </section>
+
+  <!-- 1. AI 常用网站 -->
+  <section id="s-ai">
+    <div class="sec-head"><span class="ico">🤖</span><h2>AI 常用网站</h2><span class="count" data-count></span></div>
+    <div class="grid">
+      <a class="item" href="https://chat.openai.com/" target="_blank"><span class="favi">🤖</span><span class="txt"><span class="t">ChatGPT</span></span></a>
+      <a class="item" href="https://claude.ai/" target="_blank"><span class="favi">🎭</span><span class="txt"><span class="t">Claude</span></span></a>
+      <a class="item" href="https://gemini.google.com/" target="_blank"><span class="favi">✨</span><span class="txt"><span class="t">Gemini</span></span></a>
+      <a class="item" href="https://copilot.microsoft.com/" target="_blank"><span class="favi">💬</span><span class="txt"><span class="t">Microsoft Copilot</span></span></a>
+      <a class="item" href="https://www.perplexity.ai/" target="_blank"><span class="favi">❓</span><span class="txt"><span class="t">Perplexity</span></span></a>
+      <a class="item" href="https://www.midjourney.com/" target="_blank"><span class="favi">🎨</span><span class="txt"><span class="t">Midjourney</span></span></a>
+      <a class="item" href="https://huggingface.co/" target="_blank"><span class="favi">🤗</span><span class="txt"><span class="t">Hugging Face</span></span></a>
+      <a class="item" href="https://poe.com/" target="_blank"><span class="favi">📮</span><span class="txt"><span class="t">Poe</span></span></a>
+      <a class="item" href="https://character.ai/" target="_blank"><span class="favi">👥</span><span class="txt"><span class="t">Character.AI</span></span></a>
+      <a class="item" href="https://kimi.moonshot.cn/" target="_blank"><span class="favi">🌙</span><span class="txt"><span class="t">Kimi</span></span></a>
+      <a class="item" href="https://yiyan.baidu.com/" target="_blank"><span class="favi">💡</span><span class="txt"><span class="t">文心一言</span></span></a>
+      <a class="item" href="https://www.doubao.com/" target="_blank"><span class="favi">🫘</span><span class="txt"><span class="t">豆包</span></span></a>
+      <a class="item" href="https://tongyi.aliyun.com/" target="_blank"><span class="favi">☁️</span><span class="txt"><span class="t">通义千问</span></span></a>
+      <a class="item" href="https://grok.com/" target="_blank"><span class="favi">🌀</span><span class="txt"><span class="t">Grok</span></span></a>
+      <a class="item" href="https://www.meta.ai/" target="_blank"><span class="favi">🔵</span><span class="txt"><span class="t">Meta AI</span></span></a>
+      <a class="item" href="https://chatglm.cn/" target="_blank"><span class="favi">🧠</span><span class="txt"><span class="t">智谱清言</span></span></a>
+      <a class="item" href="https://xinghuo.xfyun.cn/" target="_blank"><span class="favi">🔥</span><span class="txt"><span class="t">讯飞星火</span></span></a>
+      <a class="item" href="https://suno.com/" target="_blank"><span class="favi">🎵</span><span class="txt"><span class="t">Suno</span></span></a>
+      <a class="item" href="https://runwayml.com/" target="_blank"><span class="favi">🎬</span><span class="txt"><span class="t">Runway</span></span></a>
+    </div>
+    <div class="note">全球最热门的 AI 工具，聊天 / 绘画 / 视频 / 音乐 / 编程一站直达 · 按住卡片可拖拽排序（自动保存）</div>
+  </section>
+
+  <!-- 1. 常用搜索 -->
+  <section id="s-search">
+    <div class="sec-head"><span class="ico">🔍</span><h2>常用搜索</h2><span class="count" data-count></span></div>
+    <div class="grid">
+      <a class="item" href="http://www.baidu.com" target="_blank"><span class="favi">百</span><span class="txt"><span class="t">百度搜索</span></span></a>
+      <a class="item" href="https://cn.bing.com/" target="_blank"><span class="favi">B</span><span class="txt"><span class="t">bing 搜索</span></span></a>
+      <a class="item" href="https://fanyi.baidu.com/" target="_blank"><span class="favi">译</span><span class="txt"><span class="t">百度翻译</span></span></a>
+      <a class="item" href="https://tuostudy.upnb.top/" target="_blank"><span class="favi">图</span><span class="txt"><span class="t">图欧搜索</span></span></a>
+    </div>
+  </section>
+
+  <!-- 2. 各大资源官网 -->
+  <section id="s-res">
+    <div class="sec-head"><span class="ico">🌐</span><h2>各大资源官网</h2><span class="count" data-count></span></div>
+    <div class="grid">
+      <a class="item" href="https://www.python.org/" target="_blank"><span class="favi">Py</span><span class="txt"><span class="t">Python 官网</span></span></a>
+      <a class="item" href="https://pycharm.en.softonic.com/" target="_blank"><span class="favi">Pc</span><span class="txt"><span class="t">PyCharm 官网</span></span></a>
+      <a class="item" href="https://www.anaconda.com/products/distribution" target="_blank"><span class="favi">An</span><span class="txt"><span class="t">Anaconda 官网</span></span></a>
+      <a class="item" href="https://github.com/" target="_blank"><span class="favi">Gh</span><span class="txt"><span class="t">GitHub 官网</span></span></a>
+      <a class="item" href="https://git-scm.com/" target="_blank"><span class="favi">Gt</span><span class="txt"><span class="t">Git 官网</span></span></a>
+      <a class="item" href="https://gitee.com/" target="_blank"><span class="favi">Ge</span><span class="txt"><span class="t">Gitee 官网</span></span></a>
+      <a class="item" href="https://pypi.org/" target="_blank"><span class="favi">Pi</span><span class="txt"><span class="t">PyPI 官网</span></span></a>
+      <a class="item" href="https://docs.python.org/3/library/re.html#" target="_blank"><span class="favi">Re</span><span class="txt"><span class="t">Python 正则</span></span></a>
+      <a class="item" href="https://code.visualstudio.com/" target="_blank"><span class="favi">Vs</span><span class="txt"><span class="t">VS Code</span></span></a>
+      <a class="item" href="https://otp.landian.vip/zh-cn/" target="_blank"><span class="favi">Ot</span><span class="txt"><span class="t">Office Tool Plus</span></span></a>
+      <a class="item" href="https://powerbi.microsoft.com/zh-cn/desktop/" target="_blank"><span class="favi">Pb</span><span class="txt"><span class="t">Power BI Desktop</span></span></a>
+      <a class="item" href="https://www.voidtools.com/zh-cn/downloads/" target="_blank"><span class="favi">Ev</span><span class="txt"><span class="t">Everything 官网</span></span></a>
+      <a class="item" href="https://regex101.com/" target="_blank"><span class="favi">Rg</span><span class="txt"><span class="t">正则表达式</span></span></a>
+      <a class="item" href="https://ubuntu.com/" target="_blank"><span class="favi">Ub</span><span class="txt"><span class="t">Ubuntu 乌班图</span></span></a>
+      <a class="item" href="https://www.redhat.com/zh" target="_blank"><span class="favi">Rh</span><span class="txt"><span class="t">红帽 RedHat</span></span></a>
+      <a class="item" href="https://golang.google.cn/play/" target="_blank"><span class="favi">Go</span><span class="txt"><span class="t">Golang 官网</span></span></a>
+      <a class="item" href="https://studygolang.com/" target="_blank"><span class="favi">G2</span><span class="txt"><span class="t">Go 语言中文网</span></span></a>
+      <a class="item" href="https://studygolang.com/pkgdoc" target="_blank"><span class="favi">G3</span><span class="txt"><span class="t">Golang 标准库</span></span></a>
+      <a class="item" href="https://www.r-project.org/foundation/" target="_blank"><span class="favi">R</span><span class="txt"><span class="t">R 语言官网</span></span></a>
+      <a class="item" href="https://wiki.php.net/" target="_blank"><span class="favi">Ph</span><span class="txt"><span class="t">PHP 官网</span></span></a>
+      <a class="item" href="http://ocr.space/" target="_blank"><span class="favi">Oc</span><span class="txt"><span class="t">OCR Space</span></span></a>
+      <a class="item" href="https://www.59xuexi.com/?p=4110" target="_blank"><span class="favi">H3</span><span class="txt"><span class="t">华为认证教材</span></span></a>
+      <a class="item" href="https://calibre-ebook.com/download_windows" target="_blank"><span class="favi">Cb</span><span class="txt"><span class="t">Calibre 工具</span></span></a>
+      <a class="item" href="http://24mail.chacuo.net/" target="_blank"><span class="favi">Ml</span><span class="txt"><span class="t">10 分钟邮箱</span></span></a>
+      <a class="item" href="https://xmsoushu.com/#/" target="_blank"><span class="favi">Xm</span><span class="txt"><span class="t">熊猫搜书</span></span></a>
+      <a class="item" href="https://convertio.co/zh/" target="_blank"><span class="favi">Cv</span><span class="txt"><span class="t">Convertio 文件转换</span></span></a>
+      <a class="item" href="https://wantwords.net/" target="_blank"><span class="favi">Ww</span><span class="txt"><span class="t">反向词典</span></span></a>
+      <a class="item" href="https://wenshu.court.gov.cn/" target="_blank"><span class="favi">Ws</span><span class="txt"><span class="t">中国裁判文书网</span></span></a>
+    </div>
+  </section>
+
+  <!-- 3. 自制 Python 小软件 -->
+  <section id="s-soft">
+    <div class="sec-head"><span class="ico">🛠</span><h2>自制 Python 小软件</h2><span class="count" data-count></span></div>
+    <div class="grid">
+      <a class="item" href="https://download.csdn.net/download/scar1122/85142849" target="_blank"><span class="favi">🖼</span><span class="txt"><span class="t">图片识别文字</span></span></a>
+      <a class="item" href="https://download.csdn.net/download/scar1122/85133121" target="_blank"><span class="favi">📄</span><span class="txt"><span class="t">PDF 数据识别</span></span></a>
+      <a class="item" href="https://download.csdn.net/download/scar1122/85133078" target="_blank"><span class="favi">🔊</span><span class="txt"><span class="t">文本转换 MP3</span></span></a>
+      <a class="item" href="https://download.csdn.net/download/scar1122/85142616" target="_blank"><span class="favi">🌐</span><span class="txt"><span class="t">网页代码获取</span></span></a>
+    </div>
+    <div class="note">以下为本人 Python 写的小程序，需要的自取 ^_^</div>
+  </section>
+
+  <!-- 4. 基础学习资料 -->
+  <section id="s-basic">
+    <div class="sec-head"><span class="ico">📘</span><h2>基础学习资料</h2><span class="count" data-count></span></div>
+    <div class="grid">
+      <a class="item" href="https://www.bilibili.com/video/BV1Wh411d7hq?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">Python 爬虫</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1ji4y157uB?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">Python 数据分析</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1gt4y1D7W8?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">Python & Office</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1Z7411c7U6?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">Excel</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1oa4y1j75e?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">Excel PQ 合集</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1F741137Sm?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">PQ 简单课程</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1qa4y1H7wp?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">Power BI</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1YE411E7p3?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">DAX</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1sV411U7U8?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">DAX 2</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1Q64y1c7ji?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">M 语言第一季</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV11y4y1C7a8?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">M 语言第二季</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1Zz4y1o7ka?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">M 语言第三季</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1tf4y117Sh?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">Access</span></span></a>
+      <a class="item" href="https://www.bilibili.com/video/BV1Yz4y1Z7aJ?p=1" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">PHP 架构</span></span></a>
+    </div>
+    <div class="note">B 站视频资料，感兴趣的可以跟着学学</div>
+  </section>
+
+  <!-- 5. 进阶学习资料 -->
+  <section id="s-adv">
+    <div class="sec-head"><span class="ico">🚀</span><h2>进阶学习资料</h2><span class="count" data-count></span></div>
+    <div class="grid">
+      <a class="item" href="https://www.bilibili.com/video/BV1w3411Y7BV/?spm_id_from=333.788" target="_blank"><span class="favi">🅑</span><span class="txt"><span class="t">经营分析财务 BP</span></span></a>
+      <a class="item" href="https://blog.csdn.net/shykevin/article/details/109109114" target="_blank"><span class="favi">📝</span><span class="txt"><span class="t">Python 爬取视频</span></span></a>
+      <a class="item" href="https://blog.csdn.net/m0_64036070/article/details/123853489" target="_blank"><span class="favi">📝</span><span class="txt"><span class="t">正则表达式</span></span></a>
+      <a class="item" href="https://github.com/iswbm/python-guide" target="_blank"><span class="favi">📚</span><span class="txt"><span class="t">Python Guide</span></span></a>
+      <a class="item" href="https://developer.mozilla.org/zh-CN/docs/learn/Server-side/Django" target="_blank"><span class="favi">🅜</span><span class="txt"><span class="t">Django Web 框架</span></span></a>
+      <a class="item" href="https://zhuanlan.zhihu.com/djstudyteam" target="_blank"><span class="favi">🅩</span><span class="txt"><span class="t">DRF 实战教程</span></span></a>
+      <a class="item" href="https://realpython.com/cpython-source-code-guide/" target="_blank"><span class="favi">🐍</span><span class="txt"><span class="t">CPython 源码指南</span></span></a>
+      <a class="item" href="http://www.pythondoc.com/flask/index.html" target="_blank"><span class="favi">🧪</span><span class="txt"><span class="t">Flask 官方文档</span></span></a>
+      <a class="item" href="http://www.pythondoc.com/" target="_blank"><span class="favi">🧪</span><span class="txt"><span class="t">Flask 系统学习</span></span></a>
+      <a class="item" href="https://pycharm.iswbm.com/" target="_blank"><span class="favi">Pc</span><span class="txt"><span class="t">PyCharm 中文指南</span></span></a>
+      <a class="item" href="https://github.com/kirang89/pycrumbs" target="_blank"><span class="favi">📚</span><span class="txt"><span class="t">PyCrumbs</span></span></a>
+      <a class="item" href="http://www.pythontip.com/python-patterns/detail/abstract_factory" target="_blank"><span class="favi">💡</span><span class="txt"><span class="t">Python Tips 模式</span></span></a>
+      <a class="item" href="https://magic.iswbm.com/" target="_blank"><span class="favi">✨</span><span class="txt"><span class="t">Python 黑魔法手册</span></span></a>
+      <a class="item" href="https://python.iswbm.com/" target="_blank"><span class="favi">🐍</span><span class="txt"><span class="t">Python 中文指南</span></span></a>
+      <a class="item" href="https://scrapy-cookbook.readthedocs.io/zh_CN/latest/" target="_blank"><span class="favi">🕷</span><span class="txt"><span class="t">Scrapy Cookbook</span></span></a>
+      <a class="item" href="https://flaggo.github.io/python3-source-code-analysis/" target="_blank"><span class="favi">🔬</span><span class="txt"><span class="t">Python3 源码剖析</span></span></a>
+      <a class="item" href="http://www.pythondoc.com/" target="_blank"><span class="favi">🏠</span><span class="txt"><span class="t">Python 大本营</span></span></a>
+      <a class="item" href="https://www.bookstack.cn/explore?cid=13&tab=popular" target="_blank"><span class="favi">📖</span><span class="txt"><span class="t">书栈网：Python</span></span></a>
+      <a class="item" href="https://learnku.com/docs/pymotw" target="_blank"><span class="favi">📦</span><span class="txt"><span class="t">Python 3 标准库实例</span></span></a>
+      <a class="item" href="https://python3-cookbook.readthedocs.io/zh_CN/latest/" target="_blank"><span class="favi">🍳</span><span class="txt"><span class="t">Python Cookbook</span></span></a>
+      <a class="item" href="http://www.pythontip.com/coding/code_oj" target="_blank"><span class="favi">💡</span><span class="txt"><span class="t">Python Tips 刷题</span></span></a>
+      <a class="item" href="https://orangedatamining.com/" target="_blank"><span class="favi">🍊</span><span class="txt"><span class="t">Orange3 官网</span></span></a>
+      <a class="item" href="https://orange3.readthedocs.io/projects/orange-data-mining-library/en/latest/#tutorial" target="_blank"><span class="favi">🍊</span><span class="txt"><span class="t">Orange DML</span></span></a>
+      <a class="item" href="https://blog.csdn.net/SunChao3555/article/details/84975783" target="_blank"><span class="favi">📝</span><span class="txt"><span class="t">Orange 中文介绍</span></span></a>
+    </div>
+    <div class="note">各大 Python 网站集成，需要的可以关注</div>
+  </section>
+
+  <div class="empty-state" id="empty">没有找到匹配的网站，换个关键词试试 ~</div>
+
+  <footer>
+    <p><span class="pulse"></span>资料陆续更新中，敬请期待……</p>
+    <p style="margin-top:6px;opacity:.7">scar1437 · 个人导航站 · 单文件离线版</p>
+  </footer>
+</main>
+
+<script>
+  // ===== AI 聊天窗（国内直连：嵌入主流国内 AI 网页）=====
+  (function(){
+    // 由于免费海外接口对匿名用户已不可用，这里改为直接嵌入国内 AI 官网聊天页。
+    // 你无需任何 API Key；若某个站点要求登录，按提示登录即可使用。
+    var sites = [
+      {id:'kimi',     name:'Kimi',     url:'https://kimi.moonshot.cn/'},
+      {id:'chatglm',  name:'智谱清言',  url:'https://chatglm.cn/'},
+      {id:'tongyi',   name:'通义千问',  url:'https://tongyi.aliyun.com/'},
+      {id:'yiyan',    name:'文心一言',  url:'https://yiyan.baidu.com/'}
+    ];
+
+    var fab = document.createElement('button');
+    fab.className = 'chat-fab'; fab.textContent = '💬'; fab.title = 'AI 聊天（国内直连）';
+    var panel = document.createElement('div'); panel.className = 'chat-panel';
+    var opts = sites.map(function(s){ return '<option value="'+s.id+'">'+s.name+'</option>'; }).join('');
+    panel.innerHTML =
+      '<div class="chat-head">'+
+        '<button class="chat-home" title="隐藏主页">🏠</button>'+
+        '<span class="ttl">💬 AI 助手</span>'+
+        '<select class="chat-site" title="切换站点">'+opts+'</select>'+
+        '<button class="cls" title="关闭">✕</button>'+
+      '</div>'+
+      '<div class="chat-frame-wrap"><iframe class="chat-frame" allow="clipboard-write"></iframe></div>'+
+      '<div class="chat-toolbar">国内站点直连 · 拖动标题栏可移动窗口</div>';
+    document.body.appendChild(fab); document.body.appendChild(panel);
+    var frame = panel.querySelector('.chat-frame');
+    var siteSel = panel.querySelector('.chat-site');
+    // 拖拽/缩放期间禁用 iframe 的指针事件，防止内部页面吞掉鼠标事件导致“拖不动”
+    function disableFrame(){ try{ frame.style.pointerEvents = 'none'; }catch(_){} }
+    function enableFrame(){ try{ frame.style.pointerEvents = ''; }catch(_){} }
+    var dragMask = null;
+    function createMask(){
+      if(dragMask) return;
+      dragMask = document.createElement('div');
+      dragMask.style.cssText = 'position:fixed;inset:0;z-index:9999;background:transparent;';
+      document.body.appendChild(dragMask);
+    }
+    function removeMask(){ if(dragMask){ dragMask.remove(); dragMask = null; } }
+    // 兜底：万一 mouseup 丢失（鼠标拖出窗口外松开 / 窗口失焦），强制恢复 iframe 交互与遮罩，
+    // 避免拖拽卡死导致整页（包括主页与聊天窗）看起来“全没了”。
+    function cleanupDrag(){ enableFrame(); removeMask(); }
+    window.addEventListener('mouseup', cleanupDrag);
+    window.addEventListener('pointerup', cleanupDrag);
+    window.addEventListener('blur', cleanupDrag);
+
+    function loadSite(id){
+      var s = sites.find(function(x){ return x.id === id; }) || sites[0];
+      frame.src = s.url;
+    }
+
+    // FAB 悬浮按钮可拖拽 + 点击展开（区分拖动与点击）
+    (function(){
+      var pos = null;
+      try { pos = JSON.parse(localStorage.getItem('scar-chat-fab') || 'null'); } catch(e){}
+      if(pos && pos.left != null && pos.top != null){
+        fab.style.right = 'auto'; fab.style.bottom = 'auto';
+        fab.style.left = pos.left + 'px'; fab.style.top = pos.top + 'px';
+      }
+      var sx, sy, sl, st, drag = false, moved = false, dist = 0;
+      fab.addEventListener('mousedown', function(e){
+        drag = true; moved = false; dist = 0;
+        var r = fab.getBoundingClientRect();
+        fab.style.right = 'auto'; fab.style.bottom = 'auto';
+        fab.style.left = r.left + 'px'; fab.style.top = r.top + 'px';
+        sx = e.clientX; sy = e.clientY; sl = r.left; st = r.top;
+        fab.style.transition = 'none';
+        e.preventDefault();
+      });
+      document.addEventListener('mousemove', function(e){
+        if(!drag) return;
+        var dx = e.clientX - sx, dy = e.clientY - sy;
+        dist = Math.max(dist, Math.abs(dx) + Math.abs(dy));
+        if(dist > 4) moved = true;
+        var nl = Math.max(4, Math.min(sl + dx, window.innerWidth - fab.offsetWidth - 4));
+        var nt = Math.max(4, Math.min(st + dy, window.innerHeight - fab.offsetHeight - 4));
+        fab.style.left = nl + 'px'; fab.style.top = nt + 'px';
+        fab.style.cursor = 'grabbing';
+      });
+      document.addEventListener('mouseup', function(){
+        if(!drag) return;
+        drag = false; fab.style.transition = ''; fab.style.cursor = '';
+        if(!moved){
+          panel.classList.toggle('open');
+        } else {
+          try { localStorage.setItem('scar-chat-fab', JSON.stringify({left: parseInt(fab.style.left)||0, top: parseInt(fab.style.top)||0})); } catch(_){}
+        }
+      });
+    })();
+    panel.querySelector('.cls').addEventListener('click', function(){
+      if(document.body.classList.contains('focus-chat')){ applyFocus(false); }
+      else { panel.classList.remove('open'); }
+    });
+
+    // 一键隐藏/显示主页（专注聊天）
+    var homeBtn = panel.querySelector('.chat-home');
+    function applyFocus(hide){
+      document.body.classList.toggle('focus-chat', hide);
+      homeBtn.textContent = hide ? '🙈' : '🏠';
+      homeBtn.title = hide ? '显示主页' : '隐藏主页';
+      if(hide) panel.classList.add('open');   // 隐藏主页时自动展开并占满全屏
+      try { localStorage.setItem('scar-focus-chat', hide ? '1' : '0'); } catch(_){}
+    }
+    homeBtn.addEventListener('click', function(){ applyFocus(!document.body.classList.contains('focus-chat')); });
+    if(localStorage.getItem('scar-focus-chat') === '1') applyFocus(true);
+    siteSel.addEventListener('change', function(){ loadSite(siteSel.value); });
+
+    var last = localStorage.getItem('scar-chat-site');
+    var validIds = sites.map(function(s){ return s.id; });
+    if(last && validIds.indexOf(last) !== -1) siteSel.value = last;
+    loadSite(siteSel.value);
+    siteSel.addEventListener('change', function(){ localStorage.setItem('scar-chat-site', siteSel.value); });
+
+    // 面板拖拽移动（拖标题栏，限制在视口内）
+    (function(){
+      var head = panel.querySelector('.chat-head');
+      var sx, sy, sl, st, drag = false;
+      head.addEventListener('mousedown', function(e){
+        if(document.body.classList.contains('focus-chat')) return;
+        if(e.target.closest('select,button')) return;   // 不拦截下拉/关闭按钮
+        drag = true; disableFrame(); createMask();
+        var r = panel.getBoundingClientRect();
+        panel.style.right = 'auto'; panel.style.bottom = 'auto';
+        panel.style.left = r.left + 'px'; panel.style.top = r.top + 'px';
+        sx = e.clientX; sy = e.clientY; sl = r.left; st = r.top;
+        document.body.style.userSelect = 'none';
+        e.preventDefault();
+      });
+      document.addEventListener('mousemove', function(e){
+        if(!drag) return;
+        var nl = Math.max(4, Math.min(sl + e.clientX - sx, window.innerWidth - panel.offsetWidth - 4));
+        var nt = Math.max(4, Math.min(st + e.clientY - sy, window.innerHeight - panel.offsetHeight - 4));
+        panel.style.left = nl + 'px'; panel.style.top = nt + 'px';
+      });
+      document.addEventListener('mouseup', function(){
+        if(!drag) return; drag = false; document.body.style.userSelect = ''; enableFrame(); removeMask();
+      });
+    })();
+
+    // 八方向缩放（拖任意边框/角改变大小，专注全屏模式下禁用）
+    (function(){
+      var dirs = ['n','s','e','w','ne','nw','se','sw'];
+      var handles = {};
+      dirs.forEach(function(d){
+        var h = document.createElement('div');
+        h.className = 'chat-rsz ' + d;
+        panel.appendChild(h);
+        handles[d] = h;
+      });
+      var MINW = 280, MINH = 200;
+      var drag = false, dir = '', r0 = null, mx = 0, my = 0;
+      function onDown(e, d){
+        if(document.body.classList.contains('focus-chat')) return;
+        drag = true; dir = d; disableFrame(); createMask();
+        var r = panel.getBoundingClientRect();
+        // 归一化为 left/top + 宽高（清除 right/bottom 锚定，统一坐标体系）
+        panel.style.right = 'auto'; panel.style.bottom = 'auto';
+        panel.style.maxWidth = 'none'; panel.style.maxHeight = 'none';
+        panel.style.left = r.left + 'px'; panel.style.top = r.top + 'px';
+        panel.style.width = r.width + 'px'; panel.style.height = r.height + 'px';
+        r0 = {left:r.left, top:r.top, right:r.right, bottom:r.bottom, w:r.width, h:r.height};
+        mx = e.clientX; my = e.clientY;
+        document.body.style.userSelect = 'none';
+        e.preventDefault(); e.stopPropagation();
+      }
+      dirs.forEach(function(d){
+        handles[d].addEventListener('mousedown', function(e){ onDown(e, d); });
+      });
+      document.addEventListener('mousemove', function(e){
+        if(!drag) return;
+        var dx = e.clientX - mx, dy = e.clientY - my;
+        var left = r0.left, top = r0.top, w = r0.w, h = r0.h;
+        var east = /e/.test(dir), west = /w/.test(dir), south = /s/.test(dir), north = /n/.test(dir);
+        // 右/下方向允许拉到与浏览器窗口齐平（无余量）
+        if(east)  w = Math.max(MINW, Math.min(r0.w + dx, window.innerWidth - r0.left));
+        if(west){ var nl = Math.max(0, Math.min(r0.left + dx, r0.right - MINW)); w = r0.right - nl; left = nl; }
+        if(south) h = Math.max(MINH, Math.min(r0.h + dy, window.innerHeight - r0.top));
+        if(north){ var nt = Math.max(0, Math.min(r0.top + dy, r0.bottom - MINH)); h = r0.bottom - nt; top = nt; }
+        panel.style.left = left + 'px'; panel.style.top = top + 'px';
+        panel.style.width = w + 'px'; panel.style.height = h + 'px';
+      });
+      document.addEventListener('mouseup', function(){
+        if(!drag) return; drag = false; document.body.style.userSelect = ''; enableFrame(); removeMask();
+      });
+    })();
+  })();
+
+  // 主题切换（记忆到 localStorage）
+  (function(){
+    var saved = localStorage.getItem('scar-theme');
+    if(saved === 'dark') document.body.classList.add('dark');
+    document.getElementById('theme').addEventListener('click', function(){
+      document.body.classList.toggle('dark');
+      localStorage.setItem('scar-theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+  })();
+
+  // 顶部快捷导航（根据区块自动生成）
+  (function(){
+    var chips = document.getElementById('chips');
+    document.querySelectorAll('main section').forEach(function(sec){
+      var h = sec.querySelector('h2');
+      if(!h) return;
+      var c = document.createElement('a');
+      c.className = 'chip';
+      c.textContent = h.textContent;
+      c.href = '#' + sec.id;
+      chips.appendChild(c);
+    });
+  })();
+
+  // 显示每个区块的数量
+  document.querySelectorAll('section').forEach(function(sec){
+    var items = sec.querySelectorAll('.item:not(.empty)').length;
+    var badge = sec.querySelector('[data-count]');
+    if(badge) badge.textContent = items + ' 个';
+  });
+
+  // 实时搜索过滤
+  var q = document.getElementById('q');
+  var sections = Array.from(document.querySelectorAll('main section'));
+  var emptyState = document.getElementById('empty');
+  q.addEventListener('input', function(){
+    var kw = q.value.trim().toLowerCase();
+    var anyVisible = false;
+    sections.forEach(function(sec){
+      var items = sec.querySelectorAll('.item');
+      var secHas = false;
+      items.forEach(function(it){
+        var hit = it.textContent.toLowerCase().indexOf(kw) !== -1;
+        it.style.display = (kw === '' || hit) ? '' : 'none';
+        if(kw === '' || hit) secHas = true;
+      });
+      sec.style.display = secHas ? '' : 'none';
+      if(secHas) anyVisible = true;
+    });
+    emptyState.classList.toggle('show', !anyVisible);
+  });
+
+  // AI 区块卡片拖拽排序（顺序记忆到 localStorage）
+  (function(){
+    var grid = document.querySelector('#s-ai .grid');
+    if(!grid) return;
+    var STORE = 'scar-ai-order';
+
+    // 给每个卡片打上稳定 id，并开启 draggable
+    Array.prototype.slice.call(grid.querySelectorAll('.item')).forEach(function(it){
+      var id = it.getAttribute('href') || it.querySelector('.t').textContent.trim();
+      it.setAttribute('data-id', id);
+      it.setAttribute('draggable', 'true');
+    });
+
+    // 页面加载时恢复已保存的顺序
+    try {
+      var saved = JSON.parse(localStorage.getItem(STORE) || '[]');
+      saved.forEach(function(id){
+        var el = null;
+        grid.querySelectorAll('.item').forEach(function(it){
+          if(it.getAttribute('data-id') === id) el = it;
+        });
+        if(el) grid.appendChild(el);
+      });
+    } catch(e){}
+
+    function getAfterElement(y){
+      var els = Array.prototype.slice.call(grid.querySelectorAll('.item:not(.dragging)'));
+      var closest = {offset: -Infinity, el: null};
+      els.forEach(function(el){
+        var box = el.getBoundingClientRect();
+        var offset = y - box.top - box.height / 2;
+        if(offset < 0 && offset > closest.offset) closest = {offset: offset, el: el};
+      });
+      return closest.el;
+    }
+
+    var dragEl = null;
+    grid.addEventListener('dragstart', function(e){
+      var it = e.target.closest && e.target.closest('.item');
+      if(!it) return;
+      dragEl = it;
+      it.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      try { e.dataTransfer.setData('text/plain', it.getAttribute('data-id')); } catch(_){}
+    });
+    grid.addEventListener('dragend', function(){
+      if(dragEl) dragEl.classList.remove('dragging');
+      dragEl = null;
+      saveOrder();
+    });
+    grid.addEventListener('dragover', function(e){
+      e.preventDefault();
+      if(!dragEl) return;
+      var after = getAfterElement(e.clientY);
+      if(after == null) grid.appendChild(dragEl);
+      else if(after !== dragEl) grid.insertBefore(dragEl, after);
+    });
+    grid.addEventListener('drop', function(e){ e.preventDefault(); });
+
+    function saveOrder(){
+      var ids = Array.prototype.slice.call(grid.querySelectorAll('.item'))
+        .map(function(it){ return it.getAttribute('data-id'); });
+      try { localStorage.setItem(STORE, JSON.stringify(ids)); } catch(_){}
+    }
+  })();
+</script>
+</body>
+</html>
